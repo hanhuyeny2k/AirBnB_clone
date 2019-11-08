@@ -2,6 +2,7 @@
 """
 """
 import json
+from models.base_model import BaseModel
 
 class FileStorage:
     __file_path = "file.json"
@@ -23,7 +24,7 @@ class FileStorage:
         try:
             with open (self.__file_path, "r") as myFile:
                 dictionary = json.load(myFile)
-                self.__objects = {k: dictionary[k]
+                self.__objects = {k: BaseModel(**dictionary[k])
                                   for k in dictionary}
         except FileNotFoundError:
             pass
