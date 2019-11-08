@@ -9,5 +9,4 @@ This is how we manage the objects of our project:
 * Update attributes of an object
 * Destroy an object
 	
-
 # AirBnB_clone
