@@ -17,14 +17,15 @@ class FileStorage:
 
     def save(self):
         with open (self.__file_path, "w") as myFile:
-            my_dict = {k: self.__objects[k].to_dict() for k in self.__objects}
-            json.dump(my_dict, myFile)
+            dictionary = {key: self.__objects[key].to_dict()
+                          for key in self.__objects}
+            json.dump(dictionary, myFile)
 
     def reload(self):
         try:
             with open (self.__file_path, "r") as myFile:
                 dictionary = json.load(myFile)
-                self.__objects = {k: BaseModel(**dictionary[k])
-                                  for k in dictionary}
+                self.__objects = {key: BaseModel(**dictionary[key])
+                                  for key in dictionary}
         except FileNotFoundError:
             pass

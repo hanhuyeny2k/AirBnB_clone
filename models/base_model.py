@@ -19,8 +19,9 @@ class BaseModel:
             for key, value in kwargs.items():
                 if key == "created_at" or key == "updated_at":
                     setattr(self, key,
-                            datetime.datetime.strptime
-                            (value, "%Y-%m-%dT%H:%M:%S.%f"))
+                            datetime.datetime.strptime(
+                                value, "%Y-%m-%dT%H:%M:%S.%f"
+                            ))
                 elif key == "__class__":
                     continue
                 else:
@@ -35,10 +36,7 @@ class BaseModel:
         models.storage.save()
 
     def to_dict(self):
-        dictionary = {"my_number": self.my_number,
-                      "name": self.name,
-                      "__class__": self.__class__.__name__,
-                      "updated_at": self.updated_at.isoformat(),
-                      "id": self.id,
-                      "created_at": self.created_at.isoformat()}
+        dictionary = self.__dict__.copy()
+        dictionary["updated_at"] = self.updated_at.isoformat()
+        dictionary["created_at"] = self.created_at.isoformat()
         return dictionary
