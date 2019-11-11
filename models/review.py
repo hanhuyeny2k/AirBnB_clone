@@ -4,6 +4,7 @@
 
 import models
 
+
 class Place(models.base_model.BaseModel):
     place_id = ""
     user_id = ""
