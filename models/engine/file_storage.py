@@ -3,6 +3,8 @@
 """
 import json
 from models.base_model import BaseModel
+from models.user import User
+import models
 
 class FileStorage:
     __file_path = "file.json"
@@ -25,7 +27,14 @@ class FileStorage:
         try:
             with open (self.__file_path, "r") as myFile:
                 dictionary = json.load(myFile)
-                self.__objects = {key: BaseModel(**dictionary[key])
-                                  for key in dictionary}
+                objs = {}
+                for model in dictionary:
+                    name = model.split(".")[0]
+                    for item in dir(models):
+                        attr = getattr(models, item)
+                        if type(attr) is type(models) and dir(attr)[0] == name:
+                            cls = getattr(attr, dir(attr)[0])
+                            objs[model] = cls(**dictionary[model])
+                self.__objects = objs
         except FileNotFoundError:
             pass
