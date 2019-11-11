@@ -3,5 +3,8 @@
 """
 import models
 
+
 class Amenity(models.base_model.BaseModel):
+    """
+    """
     name = ""

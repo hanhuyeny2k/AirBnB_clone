@@ -2,11 +2,12 @@
 """
 """
 import json
-from models.base_model import BaseModel
-from models.user import User
 import models
 
+
 class FileStorage:
+    """
+    """
     __file_path = "file.json"
     __objects = {}
 
@@ -18,14 +19,14 @@ class FileStorage:
         self.__objects[key] = obj
 
     def save(self):
-        with open (self.__file_path, "w") as myFile:
+        with open(self.__file_path, "w") as myFile:
             dictionary = {key: self.__objects[key].to_dict()
                           for key in self.__objects}
             json.dump(dictionary, myFile)
 
     def reload(self):
         try:
-            with open (self.__file_path, "r") as myFile:
+            with open(self.__file_path, "r") as myFile:
                 dictionary = json.load(myFile)
                 objs = {}
                 for model in dictionary:

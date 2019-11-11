@@ -1,23 +1,23 @@
 #!/usr/bin/python3
 """
-
 """
+
 import cmd
 import sys
 from models.base_model import BaseModel
 import shlex
 from models import storage
 
+
 class HBNBCommand(cmd.Cmd):
+    """
+    """
     prompt = "(hbnb) "
 
     def do_EOF(self, line):
         """Quit command to exit the program"""
         print()
         sys.exit()
-
-    #def do_help(self, line):
-       # pass
 
     def do_quit(self, line):
         """Quit command to exit the program"""
@@ -63,7 +63,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             del storage.all()['.'.join(token[0:2])]
 
-    def do_all(self,line):
+    def do_all(self, line):
         token = shlex.split(line)
         dictionary = storage.all()
         if (len(token) < 1):
@@ -90,10 +90,10 @@ class HBNBCommand(cmd.Cmd):
         elif (len(token) < 3):
             print("** attribute name missing **")
         elif (len(token) < 4):
-            print ("** value missing **")
+            print("** value missing **")
         else:
             obj = storage.all()['.'.join(token[0:2])]
-            setattr (obj, token[2], token[3])
+            setattr(obj, token[2], token[3])
             obj.save()
 
 
