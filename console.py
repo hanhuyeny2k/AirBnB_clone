@@ -4,9 +4,15 @@
 
 import cmd
 import sys
-from models.base_model import BaseModel
 import shlex
-from models import storage
+import models
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
@@ -45,10 +51,10 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
         elif (len(token) < 2):
             print("** instance id missing **")
-        elif ('.'.join(token[0:2]) not in storage.all()):
+        elif ('.'.join(token[0:2]) not in models.storage.all()):
             print("** no instance found **")
         else:
-            print(storage.all()['.'.join(token[0:2])])
+            print(models.storage.all()['.'.join(token[0:2])])
 
     def do_destroy(self, line):
         token = shlex.split(line)
@@ -58,14 +64,14 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
         elif (len(token) < 2):
             print("** instance id missing **")
-        elif ('.'.join(token[0:2]) not in storage.all()):
+        elif ('.'.join(token[0:2]) not in models.storage.all()):
             print("** no instance found **")
         else:
-            del storage.all()['.'.join(token[0:2])]
+            del models.storage.all()['.'.join(token[0:2])]
 
     def do_all(self, line):
         token = shlex.split(line)
-        dictionary = storage.all()
+        dictionary = models.storage.all()
         if (len(token) < 1):
             for key in dictionary:
                 print(dictionary[key])
@@ -77,7 +83,7 @@ class HBNBCommand(cmd.Cmd):
                     print(value)
 
     def do_update(self, line):
-        dictionary = storage.all()
+        dictionary = models.storage.all()
         token = shlex.split(line)
         if (len(token) < 1):
             print("** class name missing **")
@@ -85,14 +91,14 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
         elif (len(token) < 2):
             print("** instance id missing **")
-        elif ('.'.join(token[0:2]) not in storage.all()):
+        elif ('.'.join(token[0:2]) not in models.storage.all()):
             print("** no instance found **")
         elif (len(token) < 3):
             print("** attribute name missing **")
         elif (len(token) < 4):
             print("** value missing **")
         else:
-            obj = storage.all()['.'.join(token[0:2])]
+            obj = models.storage.all()['.'.join(token[0:2])]
             setattr(obj, token[2], token[3])
             obj.save()
 
