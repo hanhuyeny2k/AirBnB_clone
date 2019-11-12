@@ -1,56 +1,44 @@
 #!/usr/bin/python3
-"""
+"""Provides a class 'FileStorage' to facilitate persistence of models
 """
 import json
 import models
-from models.base_model import BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
-
-
-def getcls(module, name):
-    """
-    """
-    for item in dir(module):
-        attr = getattr(module, item)
-        if type(attr) is type(module) and name in dir(attr):
-            match = getattr(attr, name)
-            if type(match) is type:
-                return (match)
-    return None
 
 
 class FileStorage:
+    """Facilitates model persistence via JSON serialization / deserialization
     """
-    """
-    __file_path = "file.json"
+    __file_path = "models.json"
     __objects = {}
 
     def all(self):
-        return self.__objects
+        """Get the dictionary of existing model instances
+        """
+        return self.__class__.__objects
 
     def new(self, obj):
+        """Add a model to the dictionary of existing model instances
+        """
         key = '{}.{}'.format(obj.__class__.__name__, obj.id)
-        self.__objects[key] = obj
+        self.__class__.__objects[key] = obj
 
     def save(self):
-        with open(self.__file_path, "w") as myFile:
-            dictionary = {key: self.__objects[key].to_dict()
-                          for key in self.__objects}
+        """Save the dictionary of existing model instances to the filesystem
+        """
+        with open(self.__class__.__file_path, "w") as myFile:
+            dictionary = {key: self.__class__.__objects[key].to_dict()
+                          for key in self.__class__.__objects}
             json.dump(dictionary, myFile)
 
     def reload(self):
+        """Load the dictionary of saved model instances from the filesystem
+        """
         try:
-            with open(self.__file_path, "r") as myFile:
-                dictionary = json.load(myFile)
-                for model in dictionary:
-                    name = model.split(".")[0]
-                    cls = getcls(models, name)
+            with open(self.__class__.__file_path, "r") as myFile:
+                objects = json.load(myFile)
+                for key in objects:
+                    cls = models.getmodel(key.split(".")[0])
                     if cls:
-                        self.__objects[model] = cls(**dictionary[model])
+                        self.__class__.__objects[key] = cls(**objects[key])
         except FileNotFoundError:
             pass

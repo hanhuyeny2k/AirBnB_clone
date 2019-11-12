@@ -1,62 +1,83 @@
 #!/usr/bin/python3
-"""
+"""Defines and executes the console
 """
 
 import cmd
+import models
 import re
 import shlex
 import sys
-import models
-from models.base_model import BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
-
-
-def getcls(module, name):
-    """
-    """
-    for item in dir(module):
-        attr = getattr(module, item)
-        if type(attr) is type(module) and name in dir(attr):
-            match = getattr(attr, name)
-            if type(match) is type:
-                return (match)
-    return None
 
 
 class HBNBCommand(cmd.Cmd):
-    """
+    """Defines console commands and behavior
     """
     prompt = "(hbnb) "
 
-    def do_EOF(self, line):
-        """Quit command to exit the program"""
-        print()
-        models.storage.save()
-        sys.exit()
-
-    def do_quit(self, line):
-        """Quit command to exit the program"""
-        models.storage.save()
-        sys.exit()
-
     def emptyline(self):
-        """
+        """Do nothing
         """
         pass
 
-    def do_create(self, line):
+    def do_help(self, line):
+        """Display helpful messages
         """
+        super().do_help(line)
+
+    def do_quit(self, line):
+        """Quit command to exit the program
+        """
+        models.storage.save()
+        sys.exit()
+
+    def do_EOF(self, line):
+        """Quit command to exit the program
+        """
+        print()
+        self.do_quit(line)
+
+    def do_all(self, line):
+        """Show all instances of a given model or, if unspecified, all models
+        """
+        token = shlex.split(line)
+        dictionary = models.storage.all()
+        if (len(token) < 1):
+            for key in dictionary:
+                print(dictionary[key])
+        else:
+            cls = models.getmodel(token[0])
+            if cls is None:
+                print("** class doesn't exist **")
+            else:
+                for _, value in dictionary.items():
+                    if value.__class__.__name__ == token[0]:
+                        print(value)
+
+    def do_count(self, line):
+        """Count the instances of a given model
         """
         token = shlex.split(line)
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = getcls(models, token[0])
+            cls = models.getmodel(token[0])
+            if cls is None:
+                print("** class doesn't exist **")
+            else:
+                count = 0
+                for value in models.storage.all().values():
+                    if value.__class__.__name__ == token[0]:
+                        count += 1
+                print(count)
+
+    def do_create(self, line):
+        """Instantiate a given model
+        """
+        token = shlex.split(line)
+        if (len(token) < 1):
+            print("** class name missing **")
+        else:
+            cls = models.getmodel(token[0])
             if cls is None:
                 print("** class doesn't exist **")
             else:
@@ -64,31 +85,14 @@ class HBNBCommand(cmd.Cmd):
                 models.storage.save()
                 print(instance.id)
 
-    def do_show(self, line):
-        """
-        """
-        token = shlex.split(line)
-        if (len(token) < 1):
-            print("** class name missing **")
-        else:
-            cls = getcls(models, token[0])
-            if cls is None:
-                print("** class doesn't exist **")
-            elif (len(token) < 2):
-                print("** instance id missing **")
-            elif ('.'.join(token[0:2]) not in models.storage.all()):
-                print("** no instance found **")
-            else:
-                print(models.storage.all()['.'.join(token[0:2])])
-
     def do_destroy(self, line):
-        """
+        """Delete a given instance of a model
         """
         token = shlex.split(line)
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = getcls(models, token[0])
+            cls = models.getmodel(token[0])
             if cls is None:
                 print("** class doesn't exist **")
             elif (len(token) < 2):
@@ -99,31 +103,31 @@ class HBNBCommand(cmd.Cmd):
                 del models.storage.all()['.'.join(token[0:2])]
                 models.storage.save()
 
-    def do_all(self, line):
-        """
-        """
-        token = shlex.split(line)
-        dictionary = models.storage.all()
-        if (len(token) < 1):
-            for key in dictionary:
-                print(dictionary[key])
-        else:
-            cls = getcls(models, token[0])
-            if cls is None:
-                print("** class doesn't exist **")
-            else:
-                for _, value in dictionary.items():
-                    if value.__class__.__name__ == token[0]:
-                        print(value)
-
-    def do_update(self, line):
-        """
+    def do_show(self, line):
+        """Show a given instance of a model
         """
         token = shlex.split(line)
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = getcls(models, token[0])
+            cls = models.getmodel(token[0])
+            if cls is None:
+                print("** class doesn't exist **")
+            elif (len(token) < 2):
+                print("** instance id missing **")
+            elif ('.'.join(token[0:2]) not in models.storage.all()):
+                print("** no instance found **")
+            else:
+                print(models.storage.all()['.'.join(token[0:2])])
+
+    def do_update(self, line):
+        """Update a given instance of a model
+        """
+        token = shlex.split(line)
+        if (len(token) < 1):
+            print("** class name missing **")
+        else:
+            cls = models.getmodel(token[0])
             if cls is None:
                 print("** class doesn't exist **")
             elif (len(token) < 2):
@@ -145,25 +149,8 @@ class HBNBCommand(cmd.Cmd):
                         setattr(obj, token[2], token[3])
                 obj.save()
 
-    def do_count(self, line):
-        """
-        """
-        token = shlex.split(line)
-        if (len(token) < 1):
-            print("** class name missing **")
-        else:
-            cls = getcls(models, token[0])
-            if cls is None:
-                print("** class doesn't exist **")
-            else:
-                count = 0
-                for value in models.storage.all().values():
-                    if value.__class__.__name__ == token[0]:
-                        count += 1
-                print(count)
-
     def precmd(self, line):
-        """
+        """Parse
         """
         ident = r"[A-Za-z_][A-Za-z0-9_]*"
         regex = r"(" + ident + r")\.(" + ident + r")\((.*)\)"
