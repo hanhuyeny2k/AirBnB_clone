@@ -1,13 +1,20 @@
 #!/usr/bin/python3
-"""
-Defines and executes the console
-"""
+"""Defines and executes the console"""
 
 import cmd
 import models
 import re
 import shlex
 import sys
+
+from models.base_model import BaseModel
+from models.amenity import Amenity
+from models.city import City
+from models.place import Place
+from models.state import State
+from models.review import Review
+from models.user import User
+from models.engine.file_storage import getmodel
 
 
 class HBNBCommand(cmd.Cmd):
@@ -33,13 +40,16 @@ class HBNBCommand(cmd.Cmd):
         self.do_quit(line)
 
     def do_all(self, line):
-        """Show all instances of a given model or, if unspecified, all models"""
-        token = shlex.split(line)
+        """Show all instances of a given model or if unspecified, all models"""
+        try:
+            token = shlex.split(line)
+        except ValueError:
+            return
         objects = models.storage.all()
         if (len(token) < 1):
             print([str(obj) for obj in objects.values()])
         else:
-            cls = models.getmodel(token[0])
+            cls = getmodel(token[0])
             if cls is None:
                 print("** class doesn't exist **")
             else:
@@ -51,11 +61,14 @@ class HBNBCommand(cmd.Cmd):
 
     def do_count(self, line):
         """Count the instances of a given model"""
-        token = shlex.split(line)
+        try:
+            token = shlex.split(line)
+        except ValueError:
+            return
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = models.getmodel(token[0])
+            cls = getmodel(token[0])
             if cls is None:
                 print("** class doesn't exist **")
             else:
@@ -67,11 +80,14 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, line):
         """Instantiate a given model"""
-        token = shlex.split(line)
+        try:
+            token = shlex.split(line)
+        except ValueError:
+            return
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = models.getmodel(token[0])
+            cls = getmodel(token[0])
             if cls is None:
                 print("** class doesn't exist **")
             else:
@@ -81,11 +97,14 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, line):
         """Delete a given instance of a model"""
-        token = shlex.split(line)
+        try:
+            token = shlex.split(line)
+        except ValueError:
+            return
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = models.getmodel(token[0])
+            cls = getmodel(token[0])
             if cls is None:
                 print("** class doesn't exist **")
             elif (len(token) < 2):
@@ -98,11 +117,14 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, line):
         """Show a given instance of a model"""
-        token = shlex.split(line)
+        try:
+            token = shlex.split(line)
+        except ValueError:
+            return
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = models.getmodel(token[0])
+            cls = getmodel(token[0])
             if cls is None:
                 print("** class doesn't exist **")
             elif (len(token) < 2):
@@ -114,11 +136,14 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, line):
         """Update a given instance of a model"""
-        token = shlex.split(line)
+        try:
+            token = shlex.split(line)
+        except ValueError:
+            return
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = models.getmodel(token[0])
+            cls = getmodel(token[0])
             if cls is None:
                 print("** class doesn't exist **")
             elif (len(token) < 2):
