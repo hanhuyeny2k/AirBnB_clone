@@ -34,10 +34,12 @@ class HBNBCommand(cmd.Cmd):
     def do_EOF(self, line):
         """Quit command to exit the program"""
         print()
+        models.storage.save()
         sys.exit()
 
     def do_quit(self, line):
         """Quit command to exit the program"""
+        models.storage.save()
         sys.exit()
 
     def emptyline(self):
@@ -57,7 +59,7 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
             else:
                 instance = cls()
-                instance.save()
+                models.storage.save()
                 print(instance.id)
 
     def do_show(self, line):
@@ -93,6 +95,7 @@ class HBNBCommand(cmd.Cmd):
                 print("** no instance found **")
             else:
                 del models.storage.all()['.'.join(token[0:2])]
+                models.storage.save()
 
     def do_all(self, line):
         """
@@ -133,12 +136,12 @@ class HBNBCommand(cmd.Cmd):
                 obj = models.storage.all()['.'.join(token[0:2])]
                 try:
                     setattr(obj, token[2], int(token[3]))
-                    obj.save()
                 except ValueError:
                     try:
                         setattr(obj, token[2], float(token[3]))
                     except ValueError:
                         setattr(obj, token[2], token[3])
+                obj.save()
 
     def do_count(self, line):
         """
