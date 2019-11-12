@@ -30,6 +30,7 @@ class HBNBCommand(cmd.Cmd):
     """
     """
     prompt = "(hbnb) "
+    cmdqueue = []
 
     def do_EOF(self, line):
         """Quit command to exit the program"""
@@ -169,6 +170,17 @@ class HBNBCommand(cmd.Cmd):
         )
         if match:
             cls, cmd, args = match.groups()
+            if cmd == "update":
+                instance, args = [s.strip() for s in args.split(',', 1)]
+                if re.match(
+                        r'\{\s*(\s*[^:]+\s*:[^,}]+,?)*\s*}$',
+                        args):
+                    pairs = [s.split(':') for s in args.strip('{}').split(',')]
+                    for key, value in pairs:
+                        command = " ".join([cmd, cls, instance, key, value])
+                        self.cmdqueue.append(command)
+                    return ""
+                return " ".join([cmd, cls, instance] + args.split(","))
             return ' '.join([cmd, cls] + args.split(','))
         return line
 
