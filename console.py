@@ -3,8 +3,9 @@
 """
 
 import cmd
-import sys
+import re
 import shlex
+import sys
 import models
 from models.base_model import BaseModel
 from models.user import User
@@ -144,6 +145,36 @@ class HBNBCommand(cmd.Cmd):
                         setattr(obj, token[2], float(token[3]))
                     except ValueError:
                         setattr(obj, token[2], token[3])
+
+    def do_count(self, line):
+        token = shlex.split(line)
+        if (len(token) < 1):
+            print("** class name missing **")
+        else:
+            cls = None
+            name = token[0]
+            for item in dir(models):
+                attr = getattr(models, item)
+                if type(attr) is type(models) and dir(attr)[0] == name:
+                    cls = getattr(attr, name)
+            if cls is None:
+                print("** class doesn't exist **")
+            else:
+                count = 0
+                for _, value in models.storage.all().items():
+                    if value.__class__.__name__ == token[0]:
+                        count += 1
+                print(count)
+
+    def precmd(self, line):
+        match = re.match(
+            r'\s*([_A-Za-z]+[_A-Za-z0-9]*)\.([_A-Za-z]+[_A-Za-z0-9]*)\((.*)\)',
+            line
+        )
+        if match:
+            cls, cmd, args = match.groups()
+            return ' '.join([cmd, cls] + args.split(','))
+        return line
 
 
 if __name__ == "__main__":
