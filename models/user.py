@@ -1,4 +1,4 @@
-#!/user/bin/python3
+#!/usr/bin/python3
 """Provides a class 'User' that inherits from 'BaseModel'
 """
 import models
