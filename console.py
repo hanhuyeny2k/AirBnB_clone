@@ -4,7 +4,6 @@
 import cmd
 import models
 import re
-import shlex
 import sys
 
 
@@ -32,7 +31,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, line):
         """Show all instances of a given model or if unspecified, all models"""
-        token = shlex.split(line)
+        token = line.split()
         objects = models.storage.all()
         if (len(token) < 1):
             print([str(obj) for obj in objects.values()])
@@ -49,7 +48,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_count(self, line):
         """Count the instances of a given model"""
-        token = shlex.split(line)
+        token = line.split()
         if (len(token) < 1):
             print("** class name missing **")
         else:
@@ -65,7 +64,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, line):
         """Instantiate a given model"""
-        token = shlex.split(line)
+        token = line.split()
         if (len(token) < 1):
             print("** class name missing **")
         else:
@@ -79,7 +78,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, line):
         """Delete a given instance of a model"""
-        token = shlex.split(line)
+        token = line.split()
         if (len(token) < 1):
             print("** class name missing **")
         else:
@@ -96,7 +95,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, line):
         """Show a given instance of a model"""
-        token = shlex.split(line)
+        token = line.split()
         if (len(token) < 1):
             print("** class name missing **")
         else:
@@ -112,7 +111,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, line):
         """Update a given instance of a model"""
-        token = shlex.split(line)
+        token = line.split()
         if (len(token) < 1):
             print("** class name missing **")
         else:
