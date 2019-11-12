@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""Defines and executes the console
-"""
+"""Defines and executes the console"""
 
 import cmd
 import models
@@ -10,35 +9,29 @@ import sys
 
 
 class HBNBCommand(cmd.Cmd):
-    """Defines console commands and behavior
-    """
+    """Defines console commands and behavior"""
     prompt = "(hbnb) "
 
     def emptyline(self):
-        """Do nothing
-        """
+        """Do nothing"""
         pass
 
     def do_help(self, line):
-        """Display helpful messages
-        """
+        """Display helpful messages"""
         super().do_help(line)
 
     def do_quit(self, line):
-        """Quit command to exit the program
-        """
+        """Quit command to exit the program"""
         models.storage.save()
         sys.exit()
 
     def do_EOF(self, line):
-        """Quit command to exit the program
-        """
+        """Quit command to exit the program"""
         print()
         self.do_quit(line)
 
     def do_all(self, line):
-        """Show all instances of a given model or, if unspecified, all models
-        """
+        """Show all instances of a given model or if unspecified, all models"""
         token = shlex.split(line)
         objects = models.storage.all()
         if (len(token) < 1):
@@ -55,8 +48,7 @@ class HBNBCommand(cmd.Cmd):
                 print(values)
 
     def do_count(self, line):
-        """Count the instances of a given model
-        """
+        """Count the instances of a given model"""
         token = shlex.split(line)
         if (len(token) < 1):
             print("** class name missing **")
@@ -72,8 +64,7 @@ class HBNBCommand(cmd.Cmd):
                 print(count)
 
     def do_create(self, line):
-        """Instantiate a given model
-        """
+        """Instantiate a given model"""
         token = shlex.split(line)
         if (len(token) < 1):
             print("** class name missing **")
@@ -87,8 +78,7 @@ class HBNBCommand(cmd.Cmd):
                 print(instance.id)
 
     def do_destroy(self, line):
-        """Delete a given instance of a model
-        """
+        """Delete a given instance of a model"""
         token = shlex.split(line)
         if (len(token) < 1):
             print("** class name missing **")
@@ -105,8 +95,7 @@ class HBNBCommand(cmd.Cmd):
                 models.storage.save()
 
     def do_show(self, line):
-        """Show a given instance of a model
-        """
+        """Show a given instance of a model"""
         token = shlex.split(line)
         if (len(token) < 1):
             print("** class name missing **")
@@ -122,8 +111,7 @@ class HBNBCommand(cmd.Cmd):
                 print(models.storage.all()['.'.join(token[0:2])])
 
     def do_update(self, line):
-        """Update a given instance of a model
-        """
+        """Update a given instance of a model"""
         token = shlex.split(line)
         if (len(token) < 1):
             print("** class name missing **")
@@ -151,8 +139,7 @@ class HBNBCommand(cmd.Cmd):
                 obj.save()
 
     def precmd(self, line):
-        """Parse <class>.<command>(<args>) syntax
-        """
+        """Parse <class>.<command>(<args>) syntax"""
         ident = r"[A-Za-z_][A-Za-z0-9_]*"
         regex = r"(" + ident + r")\.(" + ident + r")\((.*)\)"
         match = re.fullmatch(regex, line.strip())

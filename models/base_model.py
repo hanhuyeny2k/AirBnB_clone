@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""Provides a class 'BaseModel' to serve as a base class for all other models
+"""
+Provides a class 'BaseModel' to serve as a base class for all other models
 """
 import models
 from datetime import datetime
@@ -7,10 +8,12 @@ from uuid import uuid4
 
 
 class BaseModel:
-    """Defines functionality common to all models
+    """
+    Defines functionality common to all models
     """
     def __init__(self, *args, **kwargs):
-        """Instantiate a model
+        """
+        Instantiate a model
         """
         if kwargs == {}:
             self.id = str(uuid4())
@@ -26,7 +29,8 @@ class BaseModel:
                     setattr(self, key, value)
 
     def __str__(self):
-        """Convert a model to a string
+        """
+        Convert a model to a string
         """
         return "[{model}] ({ident}) {attrs}".format(
             model=self.__class__.__name__,
@@ -35,13 +39,15 @@ class BaseModel:
         )
 
     def save(self):
-        """Save a model to the filesystem
+        """
+        Save a model to the filesystem
         """
         self.updated_at = datetime.now()
         models.storage.save()
 
     def to_dict(self):
-        """Convert a model to a dictionary
+        """
+        Convert a model to a dictionary
         """
         dictionary = self.__dict__.copy()
         dictionary["__class__"] = self.__class__.__name__

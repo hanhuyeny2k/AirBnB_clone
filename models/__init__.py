@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""Provides the 'models' package
+"""
+Provides the 'models' package
 """
 import models
 from . import engine
@@ -13,7 +14,8 @@ from . import user
 
 
 def getmodel(name):
-    """Get a model by name
+    """
+    Get a model by name
     """
     for item in dir(models):
         attr = getattr(models, item)
