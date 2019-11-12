@@ -3,7 +3,6 @@
 
 import cmd
 import models
-import re
 import sys
 
 
@@ -136,30 +135,6 @@ class HBNBCommand(cmd.Cmd):
                     except ValueError:
                         setattr(obj, token[2], token[3])
                 obj.save()
-
-    def precmd(self, line):
-        """Parse <class>.<command>(<args>) syntax"""
-        ident = r"[A-Za-z_][A-Za-z0-9_]*"
-        regex = r"(" + ident + r")\.(" + ident + r")\((.*)\)"
-        match = re.fullmatch(regex, line.strip())
-        if match:
-            cls, cmd, args = match.groups()
-            if cmd == "update" and "," in args:
-                inst, args = [s.strip() for s in args.split(",", maxsplit=1)]
-                entry = r"[^ \t:][^:]*:\s*[^ \t,][^,]*"
-                regex = r"\{(\s*" + entry + r"(\s*,\s*" + entry + r")*)?\s*}"
-                if re.fullmatch(regex, args):
-                    args = args[1:-1].split(",")
-                    args = [s.split(":", maxsplit=1) for s in args]
-                    if all(len(ls) == 2 for ls in args):
-                        args = [[s.strip() for s in ls] for ls in args]
-                        for key, value in args:
-                            command = " ".join([cmd, cls, inst, key, value])
-                            self.cmdqueue.append(command)
-                    return ""
-                return " ".join([cmd, cls, inst] + args.split(","))
-            return " ".join([cmd, cls] + args.split(","))
-        return line
 
 
 if __name__ == "__main__":
