@@ -3,7 +3,18 @@
 
 import cmd
 import models
+import re
+import shlex
 import sys
+
+from models.base_model import BaseModel
+from models.amenity import Amenity
+from models.city import City
+from models.place import Place
+from models.state import State
+from models.review import Review
+from models.user import User
+from models.engine.file_storage import getmodel
 
 
 class HBNBCommand(cmd.Cmd):
@@ -30,12 +41,15 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, line):
         """Show all instances of a given model or if unspecified, all models"""
-        token = line.split()
+        try:
+            token = shlex.split(line)
+        except ValueError:
+            return
         objects = models.storage.all()
         if (len(token) < 1):
             print([str(obj) for obj in objects.values()])
         else:
-            cls = models.getmodel(token[0])
+            cls = getmodel(token[0])
             if cls is None:
                 print("** class doesn't exist **")
             else:
@@ -47,11 +61,14 @@ class HBNBCommand(cmd.Cmd):
 
     def do_count(self, line):
         """Count the instances of a given model"""
-        token = line.split()
+        try:
+            token = shlex.split(line)
+        except ValueError:
+            return
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = models.getmodel(token[0])
+            cls = getmodel(token[0])
             if cls is None:
                 print("** class doesn't exist **")
             else:
@@ -63,11 +80,14 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, line):
         """Instantiate a given model"""
-        token = line.split()
+        try:
+            token = shlex.split(line)
+        except ValueError:
+            return
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = models.getmodel(token[0])
+            cls = getmodel(token[0])
             if cls is None:
                 print("** class doesn't exist **")
             else:
@@ -77,11 +97,14 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, line):
         """Delete a given instance of a model"""
-        token = line.split()
+        try:
+            token = shlex.split(line)
+        except ValueError:
+            return
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = models.getmodel(token[0])
+            cls = getmodel(token[0])
             if cls is None:
                 print("** class doesn't exist **")
             elif (len(token) < 2):
@@ -94,11 +117,14 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, line):
         """Show a given instance of a model"""
-        token = line.split()
+        try:
+            token = shlex.split(line)
+        except ValueError:
+            return
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = models.getmodel(token[0])
+            cls = getmodel(token[0])
             if cls is None:
                 print("** class doesn't exist **")
             elif (len(token) < 2):
@@ -110,11 +136,14 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, line):
         """Update a given instance of a model"""
-        token = line.split()
+        try:
+            token = shlex.split(line)
+        except ValueError:
+            return
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = models.getmodel(token[0])
+            cls = getmodel(token[0])
             if cls is None:
                 print("** class doesn't exist **")
             elif (len(token) < 2):
@@ -135,6 +164,30 @@ class HBNBCommand(cmd.Cmd):
                     except ValueError:
                         setattr(obj, token[2], token[3])
                 obj.save()
+
+    def precmd(self, line):
+        """Parse <class>.<command>(<args>) syntax"""
+        ident = r"[A-Za-z_][A-Za-z0-9_]*"
+        regex = r"(" + ident + r")\.(" + ident + r")\((.*)\)"
+        match = re.fullmatch(regex, line.strip())
+        if match:
+            cls, cmd, args = match.groups()
+            if cmd == "update" and "," in args:
+                inst, args = [s.strip() for s in args.split(",", maxsplit=1)]
+                entry = r"[^ \t:][^:]*:\s*[^ \t,][^,]*"
+                regex = r"\{(\s*" + entry + r"(\s*,\s*" + entry + r")*)?\s*}"
+                if re.fullmatch(regex, args):
+                    args = args[1:-1].split(",")
+                    args = [s.split(":", maxsplit=1) for s in args]
+                    if all(len(ls) == 2 for ls in args):
+                        args = [[s.strip() for s in ls] for ls in args]
+                        for key, value in args:
+                            command = " ".join([cmd, cls, inst, key, value])
+                            self.cmdqueue.append(command)
+                    return ""
+                return " ".join([cmd, cls, inst] + args.split(","))
+            return " ".join([cmd, cls] + args.split(","))
+        return line
 
 
 if __name__ == "__main__":

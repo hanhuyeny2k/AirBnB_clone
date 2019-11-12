@@ -5,6 +5,25 @@ Provides a class 'FileStorage' to facilitate persistence of models
 import json
 import models
 
+from models.base_model import BaseModel
+from models.amenity import Amenity
+from models.city import City
+from models.place import Place
+from models.state import State
+from models.review import Review
+from models.user import User
+
+
+def getmodel(name):
+    """Get a model by name"""
+    for item in dir(models):
+        attr = getattr(models, item)
+        if type(attr) is type(models) and name in dir(attr):
+            match = getattr(attr, name)
+            if type(match) is type:
+                return (match)
+    return None
+
 
 class FileStorage:
     """
@@ -43,7 +62,7 @@ class FileStorage:
             with open(self.__class__.__file_path, "r") as myFile:
                 objects = json.load(myFile)
                 for key in objects:
-                    cls = models.getmodel(key.split(".")[0])
+                    cls = getmodel(key.split(".")[0])
                     if cls:
                         self.__class__.__objects[key] = cls(**objects[key])
         except FileNotFoundError:
