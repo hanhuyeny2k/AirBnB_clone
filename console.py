@@ -151,7 +151,7 @@ class HBNBCommand(cmd.Cmd):
                 obj.save()
 
     def precmd(self, line):
-        """Parse
+        """Parse <class>.<command>(<args>) syntax
         """
         ident = r"[A-Za-z_][A-Za-z0-9_]*"
         regex = r"(" + ident + r")\.(" + ident + r")\((.*)\)"
