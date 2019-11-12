@@ -21,8 +21,10 @@ def getcls(module, name):
     """
     for item in dir(module):
         attr = getattr(module, item)
-        if type(attr) is type(models) and name in dir(attr):
-            return getattr(attr, name)
+        if type(attr) is type(module) and name in dir(attr):
+            match = getattr(attr, name)
+            if type(match) is type:
+                return (match)
     return None
 
 
@@ -30,7 +32,6 @@ class HBNBCommand(cmd.Cmd):
     """
     """
     prompt = "(hbnb) "
-    cmdqueue = []
 
     def do_EOF(self, line):
         """Quit command to exit the program"""
@@ -164,27 +165,33 @@ class HBNBCommand(cmd.Cmd):
     def precmd(self, line):
         """
         """
-        match = re.match(
-            r'\s*([_A-Za-z]+[_A-Za-z0-9]*)\.([_A-Za-z]+[_A-Za-z0-9]*)\((.*)\)',
-            line
-        )
+        ident = r"[A-Za-z_][A-Za-z0-9_]*"
+        regex = r"(" + ident + r")\.(" + ident + r")\((.*)\)"
+        match = re.fullmatch(regex, line.strip())
         if match:
             cls, cmd, args = match.groups()
-            if cmd == "update":
-                instance, args = [s.strip() for s in args.split(',', 1)]
-                if re.match(
-                        r'\{\s*(\s*[^:]+\s*:[^,}]+,?)*\s*}$',
-                        args):
-                    pairs = [s.split(':') for s in args.strip('{}').split(',')]
-                    for key, value in pairs:
-                        command = " ".join([cmd, cls, instance, key, value])
-                        self.cmdqueue.append(command)
+            if cmd == "update" and "," in args:
+                inst, args = [s.strip() for s in args.split(",", maxsplit=1)]
+                entry = r"[^ \t:][^:]*:\s*[^ \t,][^,]*"
+                regex = r"\{(\s*" + entry + r"(\s*,\s*" + entry + r")*)?\s*}"
+                if re.fullmatch(regex, args):
+                    args = args[1:-1].split(",")
+                    args = [s.split(":", maxsplit=1) for s in args]
+                    if all(len(ls) == 2 for ls in args):
+                        args = [[s.strip() for s in ls] for ls in args]
+                        for key, value in args:
+                            command = " ".join([cmd, cls, inst, key, value])
+                            self.cmdqueue.append(command)
                     return ""
-                return " ".join([cmd, cls, instance] + args.split(","))
-            return ' '.join([cmd, cls] + args.split(','))
+                return " ".join([cmd, cls, inst] + args.split(","))
+            return " ".join([cmd, cls] + args.split(","))
         return line
 
 
 if __name__ == "__main__":
-    command_hbnb = HBNBCommand()
-    command_hbnb.cmdloop()
+    try:
+        command_hbnb = HBNBCommand()
+        command_hbnb.cmdloop()
+    except KeyboardInterrupt:
+        print()
+        sys.exit(130)

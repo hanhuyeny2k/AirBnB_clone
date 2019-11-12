@@ -17,8 +17,10 @@ def getcls(module, name):
     """
     for item in dir(module):
         attr = getattr(module, item)
-        if type(attr) is type(models) and name in dir(attr):
-            return getattr(attr, name)
+        if type(attr) is type(module) and name in dir(attr):
+            match = getattr(attr, name)
+            if type(match) is type:
+                return (match)
     return None
 
 
