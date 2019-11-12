@@ -16,6 +16,16 @@ from models.place import Place
 from models.review import Review
 
 
+def getcls(module, name):
+    """
+    """
+    for item in dir(module):
+        attr = getattr(module, item)
+        if type(attr) is type(models) and name in dir(attr):
+            return getattr(attr, name)
+    return None
+
+
 class HBNBCommand(cmd.Cmd):
     """
     """
@@ -31,19 +41,18 @@ class HBNBCommand(cmd.Cmd):
         sys.exit()
 
     def emptyline(self):
+        """
+        """
         pass
 
     def do_create(self, line):
+        """
+        """
         token = shlex.split(line)
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = None
-            name = token[0]
-            for item in dir(models):
-                attr = getattr(models, item)
-                if type(attr) is type(models) and dir(attr)[0] == name:
-                    cls = getattr(attr, name)
+            cls = getcls(models, token[0])
             if cls is None:
                 print("** class doesn't exist **")
             else:
@@ -52,16 +61,13 @@ class HBNBCommand(cmd.Cmd):
                 print(instance.id)
 
     def do_show(self, line):
+        """
+        """
         token = shlex.split(line)
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = None
-            name = token[0]
-            for item in dir(models):
-                attr = getattr(models, item)
-                if type(attr) is type(models) and dir(attr)[0] == name:
-                    cls = getattr(attr, name)
+            cls = getcls(models, token[0])
             if cls is None:
                 print("** class doesn't exist **")
             elif (len(token) < 2):
@@ -72,19 +78,14 @@ class HBNBCommand(cmd.Cmd):
                 print(models.storage.all()['.'.join(token[0:2])])
 
     def do_destroy(self, line):
+        """
+        """
         token = shlex.split(line)
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = None
-            name = token[0]
-            for item in dir(models):
-                attr = getattr(models, item)
-                if type(attr) is type(models) and dir(attr)[0] == name:
-                    cls = getattr(attr, name)
+            cls = getcls(models, token[0])
             if cls is None:
-                print("** class doesn't exist **")
-            elif token[0] != "BaseModel":
                 print("** class doesn't exist **")
             elif (len(token) < 2):
                 print("** instance id missing **")
@@ -94,18 +95,15 @@ class HBNBCommand(cmd.Cmd):
                 del models.storage.all()['.'.join(token[0:2])]
 
     def do_all(self, line):
+        """
+        """
         token = shlex.split(line)
         dictionary = models.storage.all()
         if (len(token) < 1):
             for key in dictionary:
                 print(dictionary[key])
         else:
-            cls = None
-            name = token[0]
-            for item in dir(models):
-                attr = getattr(models, item)
-                if type(attr) is type(models) and dir(attr)[0] == name:
-                    cls = getattr(attr, name)
+            cls = getcls(models, token[0])
             if cls is None:
                 print("** class doesn't exist **")
             else:
@@ -114,17 +112,13 @@ class HBNBCommand(cmd.Cmd):
                         print(value)
 
     def do_update(self, line):
-        dictionary = models.storage.all()
+        """
+        """
         token = shlex.split(line)
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = None
-            name = token[0]
-            for item in dir(models):
-                attr = getattr(models, item)
-                if type(attr) is type(models) and dir(attr)[0] == name:
-                    cls = getattr(attr, name)
+            cls = getcls(models, token[0])
             if cls is None:
                 print("** class doesn't exist **")
             elif (len(token) < 2):
@@ -147,26 +141,25 @@ class HBNBCommand(cmd.Cmd):
                         setattr(obj, token[2], token[3])
 
     def do_count(self, line):
+        """
+        """
         token = shlex.split(line)
         if (len(token) < 1):
             print("** class name missing **")
         else:
-            cls = None
-            name = token[0]
-            for item in dir(models):
-                attr = getattr(models, item)
-                if type(attr) is type(models) and dir(attr)[0] == name:
-                    cls = getattr(attr, name)
+            cls = getcls(models, token[0])
             if cls is None:
                 print("** class doesn't exist **")
             else:
                 count = 0
-                for _, value in models.storage.all().items():
+                for value in models.storage.all().values():
                     if value.__class__.__name__ == token[0]:
                         count += 1
                 print(count)
 
     def precmd(self, line):
+        """
+        """
         match = re.match(
             r'\s*([_A-Za-z]+[_A-Za-z0-9]*)\.([_A-Za-z]+[_A-Za-z0-9]*)\((.*)\)',
             line

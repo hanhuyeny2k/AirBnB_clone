@@ -12,6 +12,16 @@ from models.place import Place
 from models.review import Review
 
 
+def getcls(module, name):
+    """
+    """
+    for item in dir(module):
+        attr = getattr(module, item)
+        if type(attr) is type(models) and name in dir(attr):
+            return getattr(attr, name)
+    return None
+
+
 class FileStorage:
     """
     """
@@ -35,14 +45,10 @@ class FileStorage:
         try:
             with open(self.__file_path, "r") as myFile:
                 dictionary = json.load(myFile)
-                objs = {}
                 for model in dictionary:
                     name = model.split(".")[0]
-                    for item in dir(models):
-                        attr = getattr(models, item)
-                        if type(attr) is type(models) and dir(attr)[0] == name:
-                            cls = getattr(attr, dir(attr)[0])
-                            objs[model] = cls(**dictionary[model])
-                self.__objects = objs
+                    cls = getcls(models, name)
+                    if cls:
+                        self.__objects[model] = cls(**dictionary[model])
         except FileNotFoundError:
             pass
