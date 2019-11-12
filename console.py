@@ -40,18 +40,19 @@ class HBNBCommand(cmd.Cmd):
         """Show all instances of a given model or, if unspecified, all models
         """
         token = shlex.split(line)
-        dictionary = models.storage.all()
+        objects = models.storage.all()
         if (len(token) < 1):
-            for key in dictionary:
-                print(dictionary[key])
+            print([str(obj) for obj in objects.values()])
         else:
             cls = models.getmodel(token[0])
             if cls is None:
                 print("** class doesn't exist **")
             else:
-                for _, value in dictionary.items():
-                    if value.__class__.__name__ == token[0]:
-                        print(value)
+                values = []
+                for obj in objects.values():
+                    if obj.__class__.__name__ == token[0]:
+                        values.append(str(obj))
+                print(values)
 
     def do_count(self, line):
         """Count the instances of a given model
