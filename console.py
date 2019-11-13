@@ -2,6 +2,7 @@
 """
 Defines and executes the console
 """
+import ast
 import cmd
 import models
 import re
@@ -159,27 +160,26 @@ class HBNBCommand(cmd.Cmd):
 
     def precmd(self, line):
         """Parse <class>.<command>(<args>) syntax"""
-        ident = r"[A-Za-z_][A-Za-z0-9_]*"
-        regex = r"(" + ident + r")\.(" + ident + r")\((.*)\)"
+        regex = r"([A-Za-z_][A-Za-z0-9_]*)\.([A-Za-z_][A-Za-z0-9_]*)\((.*)\)"
         match = re.match(regex, line.strip())
-        if match:
-            cls, cmd, args = match.groups()
-            if cmd == "update" and "," in args:
-                inst, args = [s.strip() for s in args.split(",", maxsplit=1)]
-                entry = r"[^ \t:][^:]*:\s*[^ \t,][^,]*"
-                regex = r"\{(\s*" + entry + r"(\s*,\s*" + entry + r")*)?\s*}"
-                if re.match(regex, args):
-                    args = args[1:-1].split(",")
-                    args = [s.split(":", maxsplit=1) for s in args]
-                    if all(len(ls) == 2 for ls in args):
-                        args = [[s.strip() for s in ls] for ls in args]
-                        for key, value in args:
-                            command = " ".join([cmd, cls, inst, key, value])
-                            self.cmdqueue.append(command)
-                    return ""
-                return " ".join([cmd, cls, inst] + args.split(","))
+        if not match:
+            return line
+        cls, cmd, args = match.groups()
+        if cmd != "update" or "," not in args:
             return " ".join([cmd, cls] + args.split(","))
-        return line
+        inst, args = args.split(",", maxsplit=1)
+        try:
+            attrs = ast.literal_eval(args.strip())
+        except (SyntaxError, ValueError):
+            attrs = ""
+        if type(attrs) is dict:
+            for key, value in attrs.items():
+                command = " ".join([
+                    cmd, cls, inst, shlex.quote(key), shlex.quote(value)
+                ])
+                self.cmdqueue.append(command)
+            return ""
+        return " ".join([cmd, cls, inst] + args.split(","))
 
 
 if __name__ == "__main__":
