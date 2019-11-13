@@ -170,14 +170,12 @@ class HBNBCommand(Cmd):
         inst, args = args.split(",", maxsplit=1)
         try:
             pairs = literal_eval(args.strip())
-        except ValueError:
-            pairs = ""
-        if type(pairs) is not dict:
+            for key, value in pairs.items():
+                command = " ".join([cmd, cls, inst, quote(key), quote(value)])
+                self.cmdqueue.append(command)
+            return ""
+        except (AttributeError, SyntaxError, ValueError):
             return " ".join([cmd, cls, inst] + args.split(","))
-        for key, value in pairs.items():
-            command = " ".join([cmd, cls, inst, quote(key), quote(value)])
-            self.cmdqueue.append(command)
-        return ""
 
 
 if __name__ == "__main__":
