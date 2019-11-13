@@ -14,6 +14,5 @@ class test_user(Unittest.Unittest):
 
     def check_name(self):
         """ check for username input """
-        my_model = BaseModel()
-        my_model.name = "Holberton"
-
+        my_user = User()
+        my_model.last_name = "Holberton"

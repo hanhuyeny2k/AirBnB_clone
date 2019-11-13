@@ -16,4 +16,3 @@ class test_state(Unittest.Unittest):
         """ check for state name input """
         my_model = BaseModel()
         my_model.name = "Holberton"
-
