@@ -14,21 +14,19 @@ from models.review import Review
 from models.user import User
 
 
-def getmodel(name):
-    """Get a model by name"""
-    for item in dir(models):
-        attr = getattr(models, item)
-        if type(attr) is type(models) and name in dir(attr):
-            match = getattr(attr, name)
-            if type(match) is type:
-                return (match)
-    return None
-
-
 class FileStorage:
     """
     Facilitates model persistence via JSON serialization / deserialization
     """
+    MODELS = {
+        'BaseModel': BaseModel,
+        'Amenity': Amenity,
+        'City': City,
+        'Place': Place,
+        'State': State,
+        'Review': Review,
+        'User': User,
+    }
     __file_path = "file.json"
     __objects = {}
 
@@ -62,8 +60,10 @@ class FileStorage:
             with open(self.__class__.__file_path, "r") as myFile:
                 objects = json.load(myFile)
                 for key in objects:
-                    cls = getmodel(key.split(".")[0])
-                    if cls:
+                    try:
+                        cls = self.__class__.MODELS[key.split('.')[0]]
                         self.__class__.__objects[key] = cls(**objects[key])
+                    except KeyError:
+                        pass
         except FileNotFoundError:
             pass
