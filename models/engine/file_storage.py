@@ -30,21 +30,21 @@ class FileStorage:
         """
         Save the dictionary of existing model instances to the filesystem
         """
-        with open(self.__class__.__file_path, "w") as myFile:
-            dictionary = {key: self.__class__.__objects[key].to_dict()
-                          for key in self.__class__.__objects}
-            json.dump(dictionary, myFile)
+        with open(self.__class__.__file_path, "w") as ofile:
+            dictionary = {key: value.to_dict() for
+                          key, value in self.__class__.__objects.items()}
+            json.dump(dictionary, ofile)
 
     def reload(self):
         """
         Load the dictionary of saved model instances from the filesystem
         """
         try:
-            with open(self.__class__.__file_path, "r") as myFile:
-                objects = json.load(myFile)
-                for key in objects:
+            with open(self.__class__.__file_path, "r") as ifile:
+                objects = json.load(ifile)
+                for key, value in objects.items():
                     cls = models.getmodel(key.split(".")[0])
                     if cls:
-                        self.__class__.__objects[key] = cls(**objects[key])
+                        self.__class__.__objects[key] = cls(**value)
         except FileNotFoundError:
             pass

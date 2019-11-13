@@ -7,7 +7,6 @@ import cmd
 import models
 import re
 import shlex
-import sys
 
 
 class HBNBCommand(cmd.Cmd):
@@ -25,19 +24,20 @@ class HBNBCommand(cmd.Cmd):
     def do_quit(self, line):
         """Quit command to exit the program"""
         models.storage.save()
-        sys.exit()
+        return True
 
     def do_EOF(self, line):
         """Quit command to exit the program"""
         print()
-        self.do_quit(line)
+        models.storage.save()
+        return True
 
     def do_all(self, line):
         """Show all instances of a given model or if unspecified, all models"""
         try:
             token = shlex.split(line)
         except ValueError:
-            return
+            return None
         objects = models.storage.all()
         if len(token) < 1:
             print([str(obj) for obj in objects.values()])
@@ -57,7 +57,7 @@ class HBNBCommand(cmd.Cmd):
         try:
             token = shlex.split(line)
         except ValueError:
-            return
+            return None
         if len(token) < 1:
             print("** class name missing **")
         else:
@@ -76,7 +76,7 @@ class HBNBCommand(cmd.Cmd):
         try:
             token = shlex.split(line)
         except ValueError:
-            return
+            return None
         if len(token) < 1:
             print("** class name missing **")
         else:
@@ -93,7 +93,7 @@ class HBNBCommand(cmd.Cmd):
         try:
             token = shlex.split(line)
         except ValueError:
-            return
+            return None
         if len(token) < 1:
             print("** class name missing **")
         else:
@@ -113,7 +113,7 @@ class HBNBCommand(cmd.Cmd):
         try:
             token = shlex.split(line)
         except ValueError:
-            return
+            return None
         if len(token) < 1:
             print("** class name missing **")
         else:
@@ -132,7 +132,7 @@ class HBNBCommand(cmd.Cmd):
         try:
             token = shlex.split(line)
         except ValueError:
-            return
+            return None
         if len(token) < 1:
             print("** class name missing **")
         else:
@@ -161,7 +161,7 @@ class HBNBCommand(cmd.Cmd):
     def precmd(self, line):
         """Parse <class>.<command>(<args>) syntax"""
         regex = r"([A-Za-z_][A-Za-z0-9_]*)\.([A-Za-z_][A-Za-z0-9_]*)\((.*)\)"
-        match = re.match(regex, line.strip())
+        match = re.fullmatch(regex, line.strip())
         if not match:
             return line
         cls, cmd, args = match.groups()
@@ -169,12 +169,12 @@ class HBNBCommand(cmd.Cmd):
             return " ".join([cmd, cls, args])
         inst, args = args.split(",", maxsplit=1)
         try:
-            attrs = ast.literal_eval(args.strip())
+            pairs = ast.literal_eval(args.strip())
         except (SyntaxError, ValueError):
-            attrs = ""
-        if type(attrs) is not dict:
+            pairs = ""
+        if type(pairs) is not dict:
             return " ".join([cmd, cls, inst] + args.split(","))
-        for key, value in attrs.items():
+        for key, value in pairs.items():
             command = " ".join([
                 cmd, cls, inst, shlex.quote(key), shlex.quote(value)
             ])
