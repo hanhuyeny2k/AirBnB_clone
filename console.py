@@ -155,7 +155,10 @@ class HBNBCommand(Cmd):
                     try:
                         setattr(obj, token[2], float(token[3]))
                     except ValueError:
-                        setattr(obj, token[2], token[3])
+                        try:
+                            setattr(obj, token[2], token[3])
+                        except ValueError:
+                            return None
                 obj.save()
 
     def precmd(self, line):
@@ -167,17 +170,17 @@ class HBNBCommand(Cmd):
         cls, cmd, args = match.groups()
         if cmd != "update" or "," not in args:
             return " ".join([cmd, cls, args])
+        inst, args = args.split(",", maxsplit=1)
         try:
-            inst, args = args.split(",", maxsplit=1)
             pairs = literal_eval(args.strip())
-            for key, value in pairs.items():
-                command = " ".join([
-                    cmd, cls, inst, quote(key), quote(value)
-                ])
-                self.cmdqueue.append(command)
-            return ""
-        except (AttributeError, SyntaxError, ValueError):
+        except (SyntaxError, ValueError):
+            pairs = ""
+        if type(pairs) is not dict:
             return " ".join([cmd, cls, inst] + args.split(","))
+        for key, value in pairs.items():
+            command = " ".join([cmd, cls, inst, quote(key), quote(value)])
+            self.cmdqueue.append(command)
+        return ""
 
 
 if __name__ == "__main__":
