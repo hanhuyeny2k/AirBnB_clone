@@ -102,10 +102,10 @@ class HBNBCommand(Cmd):
                 print("** class doesn't exist **")
             elif len(token) < 2:
                 print("** instance id missing **")
-            elif ('.'.join(token[0:2]) not in models.storage.all()):
+            elif (".".join(token[0:2]) not in models.storage.all()):
                 print("** no instance found **")
             else:
-                del models.storage.all()['.'.join(token[0:2])]
+                del models.storage.all()[".".join(token[0:2])]
                 models.storage.save()
 
     def do_show(self, line):
@@ -122,10 +122,10 @@ class HBNBCommand(Cmd):
                 print("** class doesn't exist **")
             elif len(token) < 2:
                 print("** instance id missing **")
-            elif ('.'.join(token[0:2]) not in models.storage.all()):
+            elif (".".join(token[0:2]) not in models.storage.all()):
                 print("** no instance found **")
             else:
-                print(models.storage.all()['.'.join(token[0:2])])
+                print(models.storage.all()[".".join(token[0:2])])
 
     def do_update(self, line):
         """Update a given instance of a model"""
@@ -141,14 +141,14 @@ class HBNBCommand(Cmd):
                 print("** class doesn't exist **")
             elif len(token) < 2:
                 print("** instance id missing **")
-            elif ('.'.join(token[0:2]) not in models.storage.all()):
+            elif (".".join(token[0:2]) not in models.storage.all()):
                 print("** no instance found **")
             elif len(token) < 3:
                 print("** attribute name missing **")
             elif len(token) < 4:
                 print("** value missing **")
             else:
-                obj = models.storage.all()['.'.join(token[0:2])]
+                obj = models.storage.all()[".".join(token[0:2])]
                 try:
                     setattr(obj, token[2], int(token[3]))
                 except ValueError:
@@ -156,7 +156,7 @@ class HBNBCommand(Cmd):
                         setattr(obj, token[2], float(token[3]))
                     except ValueError:
                         try:
-                            setattr(obj, token[2], token[3])
+                            setattr(obj, token[2], str(token[3]))
                         except ValueError:
                             return None
                 obj.save()
@@ -173,12 +173,16 @@ class HBNBCommand(Cmd):
         inst, args = args.split(",", maxsplit=1)
         try:
             pairs = literal_eval(args.strip())
-        except (SyntaxError, ValueError):
+        except SyntaxError:
+            return ""
+        except ValueError:
             pairs = ""
         if type(pairs) is not dict:
-            return " ".join([cmd, cls, inst] + args.split(","))
+            return " ".join([cmd, cls, inst] + args.split(",", maxsplit=1))
         for key, value in pairs.items():
-            command = " ".join([cmd, cls, inst, quote(key), quote(value)])
+            command = " ".join([
+                cmd, cls, inst, quote(str(key)), quote(str(value))
+            ])
             self.cmdqueue.append(command)
         return ""
 
