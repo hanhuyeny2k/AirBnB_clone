@@ -166,20 +166,20 @@ class HBNBCommand(cmd.Cmd):
             return line
         cls, cmd, args = match.groups()
         if cmd != "update" or "," not in args:
-            return " ".join([cmd, cls] + args.split(","))
+            return " ".join([cmd, cls, args])
         inst, args = args.split(",", maxsplit=1)
         try:
             attrs = ast.literal_eval(args.strip())
         except (SyntaxError, ValueError):
             attrs = ""
-        if type(attrs) is dict:
-            for key, value in attrs.items():
-                command = " ".join([
-                    cmd, cls, inst, shlex.quote(key), shlex.quote(value)
-                ])
-                self.cmdqueue.append(command)
-            return ""
-        return " ".join([cmd, cls, inst] + args.split(","))
+        if type(attrs) is not dict:
+            return " ".join([cmd, cls, inst] + args.split(","))
+        for key, value in attrs.items():
+            command = " ".join([
+                cmd, cls, inst, shlex.quote(key), shlex.quote(value)
+            ])
+            self.cmdqueue.append(command)
+        return ""
 
 
 if __name__ == "__main__":
