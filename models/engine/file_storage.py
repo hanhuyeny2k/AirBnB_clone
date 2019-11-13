@@ -5,28 +5,11 @@ Provides a class 'FileStorage' to facilitate persistence of models
 import json
 import models
 
-from models.base_model import BaseModel
-from models.amenity import Amenity
-from models.city import City
-from models.place import Place
-from models.state import State
-from models.review import Review
-from models.user import User
-
 
 class FileStorage:
     """
     Facilitates model persistence via JSON serialization / deserialization
     """
-    MODELS = {
-        'BaseModel': BaseModel,
-        'Amenity': Amenity,
-        'City': City,
-        'Place': Place,
-        'State': State,
-        'Review': Review,
-        'User': User,
-    }
     __file_path = "file.json"
     __objects = {}
 
@@ -60,10 +43,8 @@ class FileStorage:
             with open(self.__class__.__file_path, "r") as myFile:
                 objects = json.load(myFile)
                 for key in objects:
-                    try:
-                        cls = self.__class__.MODELS[key.split('.')[0]]
+                    cls = models.getmodel(key.split(".")[0])
+                    if cls:
                         self.__class__.__objects[key] = cls(**objects[key])
-                    except KeyError:
-                        pass
         except FileNotFoundError:
             pass
