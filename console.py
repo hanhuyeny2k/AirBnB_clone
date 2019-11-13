@@ -2,14 +2,14 @@
 """
 Defines and executes the console
 """
-import ast
-import cmd
 import models
-import re
-import shlex
+from ast import literal_eval
+from cmd import Cmd
+from re import fullmatch
+from shlex import quote, split
 
 
-class HBNBCommand(cmd.Cmd):
+class HBNBCommand(Cmd):
     """Defines console commands and behavior"""
     prompt = "(hbnb) "
 
@@ -35,7 +35,7 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, line):
         """Show all instances of a given model or if unspecified, all models"""
         try:
-            token = shlex.split(line)
+            token = split(line)
         except ValueError:
             return None
         objects = models.storage.all()
@@ -55,7 +55,7 @@ class HBNBCommand(cmd.Cmd):
     def do_count(self, line):
         """Count the instances of a given model"""
         try:
-            token = shlex.split(line)
+            token = split(line)
         except ValueError:
             return None
         if len(token) < 1:
@@ -74,7 +74,7 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, line):
         """Instantiate a given model"""
         try:
-            token = shlex.split(line)
+            token = split(line)
         except ValueError:
             return None
         if len(token) < 1:
@@ -91,7 +91,7 @@ class HBNBCommand(cmd.Cmd):
     def do_destroy(self, line):
         """Delete a given instance of a model"""
         try:
-            token = shlex.split(line)
+            token = split(line)
         except ValueError:
             return None
         if len(token) < 1:
@@ -111,7 +111,7 @@ class HBNBCommand(cmd.Cmd):
     def do_show(self, line):
         """Show a given instance of a model"""
         try:
-            token = shlex.split(line)
+            token = split(line)
         except ValueError:
             return None
         if len(token) < 1:
@@ -130,7 +130,7 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, line):
         """Update a given instance of a model"""
         try:
-            token = shlex.split(line)
+            token = split(line)
         except ValueError:
             return None
         if len(token) < 1:
@@ -161,7 +161,7 @@ class HBNBCommand(cmd.Cmd):
     def precmd(self, line):
         """Parse <class>.<command>(<args>) syntax"""
         regex = r"([A-Za-z_][A-Za-z0-9_]*)\.([A-Za-z_][A-Za-z0-9_]*)\((.*)\)"
-        match = re.fullmatch(regex, line.strip())
+        match = fullmatch(regex, line.strip())
         if not match:
             return line
         cls, cmd, args = match.groups()
@@ -169,19 +169,16 @@ class HBNBCommand(cmd.Cmd):
             return " ".join([cmd, cls, args])
         inst, args = args.split(",", maxsplit=1)
         try:
-            pairs = ast.literal_eval(args.strip())
-        except (SyntaxError, ValueError):
+            pairs = literal_eval(args.strip())
+        except ValueError:
             pairs = ""
         if type(pairs) is not dict:
             return " ".join([cmd, cls, inst] + args.split(","))
         for key, value in pairs.items():
-            command = " ".join([
-                cmd, cls, inst, shlex.quote(key), shlex.quote(value)
-            ])
+            command = " ".join([cmd, cls, inst, quote(key), quote(value)])
             self.cmdqueue.append(command)
         return ""
 
 
 if __name__ == "__main__":
-    console = HBNBCommand()
-    console.cmdloop()
+    HBNBCommand().cmdloop()
