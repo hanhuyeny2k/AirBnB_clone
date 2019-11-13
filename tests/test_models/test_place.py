@@ -16,4 +16,3 @@ class test_place(Unittest.Unittest):
         """ check for place name input """
         my_model = BaseModel()
         my_model.name = "Holberton"
-

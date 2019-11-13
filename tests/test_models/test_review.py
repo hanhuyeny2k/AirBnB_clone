@@ -16,4 +16,3 @@ class test_review(Unittest.Unittest):
         """ check for review """
         my_model = BaseModel()
         my_model.name = "Holberton"
-

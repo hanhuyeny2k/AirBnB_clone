@@ -16,4 +16,3 @@ class test_amenity(Unittest.Unittest):
         """ check for amenity input """
         my_model = BaseModel()
         my_model.name = "Holberton"
-
