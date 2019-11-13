@@ -165,19 +165,19 @@ class HBNBCommand(Cmd):
         if not match:
             return line
         cls, cmd, args = match.groups()
-        if cmd == "update" and "," in args:
+        if cmd != "update" or "," not in args:
+            return " ".join([cmd, cls, args])
+        try:
             inst, args = args.split(",", maxsplit=1)
-            try:
-                pairs = literal_eval(args.strip())
-                for key, value in pairs.items():
-                    command = " ".join([
-                        cmd, cls, inst, quote(key), quote(value)
-                    ])
-                    self.cmdqueue.append(command)
-                return ""
-            except (AttributeError, SyntaxError, ValueError):
-                return " ".join([cmd, cls, inst] + args.split(","))
-        return " ".join([cmd, cls, args])
+            pairs = literal_eval(args.strip())
+            for key, value in pairs.items():
+                command = " ".join([
+                    cmd, cls, inst, quote(key), quote(value)
+                ])
+                self.cmdqueue.append(command)
+            return ""
+        except (AttributeError, SyntaxError, ValueError):
+            return " ".join([cmd, cls, inst] + args.split(","))
 
 
 if __name__ == "__main__":
