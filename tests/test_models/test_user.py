@@ -6,12 +6,13 @@ Test User
 import unittest
 from models.base_model import BaseModel
 from models.user import User
-from os import getcwd, chdir
+from os import chdir, getcwd
+from pep8 import StyleGuide
 from shutil import rmtree
 from tempfile import mkdtemp
 
 
-class test_User(unittest.TestCase):
+class TestUser(unittest.TestCase):
     """
     Test User
     """
@@ -47,3 +48,11 @@ class test_User(unittest.TestCase):
         self.assertEqual(my_user.first_name, "")
         self.assertEqual(my_user.last_name, "")
         self.assertTrue(isinstance(my_user, BaseModel))
+
+    def test_pep8(self):
+        """
+        Test PEP8 conformance
+        """
+        style = StyleGuide(quiet=True)
+        check = style.check_files(['models/place.py'])
+        self.assertEqual(check.total_errors, 0)

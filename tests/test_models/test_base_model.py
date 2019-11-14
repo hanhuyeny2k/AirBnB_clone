@@ -7,12 +7,13 @@ import unittest
 from datetime import datetime
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
-from os import getcwd, chdir, path
+from os import chdir, getcwd, path
+from pep8 import StyleGuide
 from shutil import rmtree
 from tempfile import mkdtemp
 
 
-class test_BaseModel(unittest.TestCase):
+class TestBaseModel(unittest.TestCase):
     """
     Test BaseModel
     """
@@ -96,3 +97,11 @@ class test_BaseModel(unittest.TestCase):
                          my_model.updated_at.isoformat())
         self.assertEqual(my_model.to_dict()["created_at"],
                          my_model.created_at.isoformat())
+
+    def test_pep8(self):
+        """
+        Test PEP8 conformance
+        """
+        style = StyleGuide(quiet=True)
+        check = style.check_files(['models/place.py'])
+        self.assertEqual(check.total_errors, 0)

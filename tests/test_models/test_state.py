@@ -6,12 +6,13 @@ Test State
 import unittest
 from models.base_model import BaseModel
 from models.state import State
-from os import getcwd, chdir
+from os import chdir, getcwd
+from pep8 import StyleGuide
 from shutil import rmtree
 from tempfile import mkdtemp
 
 
-class test_State(unittest.TestCase):
+class TestState(unittest.TestCase):
     """
     test state
     """
@@ -41,3 +42,11 @@ class test_State(unittest.TestCase):
         my_state = State()
         self.assertEqual(my_state.name, "")
         self.assertTrue(isinstance(my_state, BaseModel))
+
+    def test_pep8(self):
+        """
+        Test PEP8 conformance
+        """
+        style = StyleGuide(quiet=True)
+        check = style.check_files(['models/place.py'])
+        self.assertEqual(check.total_errors, 0)

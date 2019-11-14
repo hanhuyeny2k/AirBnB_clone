@@ -6,12 +6,13 @@ Test City
 import unittest
 from models.base_model import BaseModel
 from models.city import City
-from os import getcwd, chdir
+from os import chdir, getcwd
+from pep8 import StyleGuide
 from shutil import rmtree
 from tempfile import mkdtemp
 
 
-class test_City(unittest.TestCase):
+class TestCity(unittest.TestCase):
     """
     Test City
     """
@@ -43,3 +44,11 @@ class test_City(unittest.TestCase):
         self.assertEqual(my_city.state_id, "")
         self.assertEqual(my_city.name, "")
         self.assertTrue(isinstance(my_city, BaseModel))
+
+    def test_pep8(self):
+        """
+        Test PEP8 conformance
+        """
+        style = StyleGuide(quiet=True)
+        check = style.check_files(['models/place.py'])
+        self.assertEqual(check.total_errors, 0)
