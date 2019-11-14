@@ -22,7 +22,7 @@ class TestBaseModel(unittest.TestCase):
     """
     def setUp(self):
         """
-        Create a temporary directory and Base instance
+        Create a temporary directory and enter it
         """
         chdir(mkdtemp())
 
