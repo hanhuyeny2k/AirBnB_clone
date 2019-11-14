@@ -149,16 +149,17 @@ class HBNBCommand(Cmd):
                 print("** value missing **")
             else:
                 obj = models.storage.all()[".".join(token[0:2])]
-                try:
-                    setattr(obj, token[2], int(token[3]))
-                except ValueError:
+                for key, value in zip(token[2::2], token[3::2]):
                     try:
-                        setattr(obj, token[2], float(token[3]))
+                        setattr(obj, key, int(value))
                     except ValueError:
                         try:
-                            setattr(obj, token[2], str(token[3]))
+                            setattr(obj, key, float(value))
                         except ValueError:
-                            return None
+                            try:
+                                setattr(obj, key, str(value))
+                            except ValueError:
+                                pass
                 obj.save()
 
     def precmd(self, line):
@@ -168,10 +169,8 @@ class HBNBCommand(Cmd):
         if not match:
             return line
         cls, cmd, args = match.groups()
-        if cmd != "update":
+        if cmd != "update" or "," not in args:
             return " ".join([cmd, cls, args])
-        if "," not in args:
-            return ""
         inst, args = args.split(",", maxsplit=1)
         try:
             pairs = literal_eval(args.strip())
@@ -179,13 +178,10 @@ class HBNBCommand(Cmd):
             pairs = ""
         if type(pairs) is not dict:
             return " ".join([cmd, cls, inst] + args.split(",", maxsplit=1))
-        for k, v in pairs.items():
-            line = " ".join([cmd, cls, inst, quote(str(k)), quote(str(v))])
-            self.cmdqueue.append(line)
-        try:
-            return self.cmdqueue.pop()
-        except IndexError:
-            return ""
+        args = []
+        for key, value in pairs.items():
+            args.extend([quote(str(key)), quote(str(value))])
+        return " ".join([cmd, cls, inst] + args)
 
 
 if __name__ == "__main__":
