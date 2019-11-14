@@ -53,10 +53,10 @@ class test_BaseModel(unittest.TestCase):
         Test attributes
         """
         my_model = BaseModel()
-        self.assertIsInstance(my_model.id, str)
-        self.assertIsInstance(my_model.created_at, datetime)
-        self.assertIsInstance(my_model.updated_at, datetime)
-        self.assertIsInstance(my_model.__class__, type)
+        self.assertIs(type(my_model.id), str)
+        self.assertIs(type(my_model.created_at), datetime)
+        self.assertIs(type(my_model.updated_at), datetime)
+        self.assertIs(type(my_model.__class__), type)
 
     def test_str(self):
         """
@@ -68,7 +68,7 @@ class test_BaseModel(unittest.TestCase):
             my_model.id,
             my_model.__dict__,
         )
-        self.assertEqual(string, my_model.__str__())
+        self.assertEqual(string, str(my_model))
 
     def test_save(self):
         """
