@@ -163,7 +163,7 @@ class HBNBCommand(Cmd):
 
     def precmd(self, line):
         """Parse <class>.<command>(<args>) syntax"""
-        regex = "([A-Za-z_][A-Za-z0-9_]*)\\.([A-Za-z_][A-Za-z0-9_]*)\\((.*)\\)"
+        regex = r"([A-Za-z_][A-Za-z0-9_]*)\.([A-Za-z_][A-Za-z0-9_]*)\((.*)\)"
         match = fullmatch(regex, line.strip())
         if not match:
             return line
@@ -171,12 +171,7 @@ class HBNBCommand(Cmd):
         if cmd != "update" or "," not in args:
             return " ".join([cmd, cls, args])
         inst, args = args.split(",", maxsplit=1)
-        try:
-            pairs = literal_eval(args.strip())
-        except SyntaxError:
-            return ""
-        except ValueError:
-            pairs = ""
+        pairs = literal_eval(args.strip())
         if type(pairs) is not dict:
             return " ".join([cmd, cls, inst] + args.split(",", maxsplit=1))
         for key, value in pairs.items():
