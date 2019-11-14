@@ -30,31 +30,31 @@ class TestConsole(unittest.TestCase):
     def test_emptyline(self):
         pass
 
-    def test_do_help(self):
+    def test_help(self):
         pass
 
-    def test_do_quit(self):
+    def test_quit(self):
         pass
 
-    def test_do_EOF(self):
+    def test_EOF(self):
         pass
 
-    def test_do_all(self):
+    def test_all(self):
         pass
 
-    def test_do_count(self):
+    def test_count(self):
         pass
 
-    def test_do_create(self):
+    def test_create(self):
         pass
 
-    def test_do_destroy(self):
+    def test_destroy(self):
         pass
 
-    def test_do_show(self):
+    def test_show(self):
         pass
 
-    def test_do_update(self):
+    def test_update(self):
         pass
 
     def test_precmd(self):
