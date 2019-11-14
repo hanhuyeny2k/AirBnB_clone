@@ -171,7 +171,12 @@ class HBNBCommand(Cmd):
         if cmd != "update" or "," not in args:
             return " ".join([cmd, cls, args])
         inst, args = args.split(",", maxsplit=1)
-        pairs = literal_eval(args.strip())
+        try:
+            pairs = literal_eval(args.strip())
+        except SyntaxError:
+            return ""
+        except ValueError:
+            pairs = ""
         if type(pairs) is not dict:
             return " ".join([cmd, cls, inst] + args.split(",", maxsplit=1))
         for key, value in pairs.items():
