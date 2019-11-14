@@ -1,18 +1,33 @@
 #!/usr/bin/python3
 """
-Test File Storage
+Test FileStorage
 """
 
 import unittest
-from models.file_storage import FileStorage
+from models.engine.file_storage import FileStorage
+from os import getcwd, chdir
+from shutil import rmtree
+from tempfile import mkdtemp
 
 
-class test_FileStorage(Unittest.Unittest):
+class test_FileStorage(unittest.TestCase):
     """
-    test for file storage
+    Test FileStorage
     """
+    def setUp(self):
+        """
+        Create a temporary directory and Base instance
+        """
+        chdir(mkdtemp())
 
-    def check_file_storage(self):
-        """ check for file storage """
-        my_model = BaseModel()
-        my_model. = "Holberton"
+    def tearDown(self):
+        """
+        Remove temporary files and directories
+        """
+        rmtree(getcwd(), ignore_errors=True)
+
+    def test_init(self):
+        """
+        Test instance
+        """
+        my_model = FileStorage()

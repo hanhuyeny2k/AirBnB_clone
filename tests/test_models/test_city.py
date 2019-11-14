@@ -4,15 +4,31 @@ Test City
 """
 
 import unittest
-from models.city import city
+from models.city import City
+from os import getcwd, chdir
+from shutil import rmtree
+from tempfile import mkdtemp
 
 
-class test_city(Unittest.Unittest):
+class test_City(unittest.TestCase):
     """
-    test name of the city
+    Test City
     """
+    def setUp(self):
+        """
+        Create a temporary directory and Base instance
+        """
+        chdir(mkdtemp())
 
-    def check_city(self):
-        """ check for city name input """
-        my_model = BaseModel()
-        my_model. = "Holberton"
+    def tearDown(self):
+        """
+        Remove temporary files and directories
+        """
+        rmtree(getcwd(), ignore_errors=True)
+
+    def test_instance(self):
+        """
+        Test instance
+        """
+        my_model = City()
+        my_model.name = "Holberton"
