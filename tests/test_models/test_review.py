@@ -6,10 +6,13 @@ Test Review
 import unittest
 from models.base_model import BaseModel
 from models.review import Review
-from os import chdir, getcwd
+from os import chdir, getcwd, path
 from pep8 import StyleGuide
 from shutil import rmtree
 from tempfile import mkdtemp
+
+
+MODEL = path.join(getcwd(), 'models', 'review.py')
 
 
 class TestReview(unittest.TestCase):
@@ -46,3 +49,11 @@ class TestReview(unittest.TestCase):
         self.assertEqual(my_review.user_id, "")
         self.assertEqual(my_review.text, "")
         self.assertTrue(isinstance(my_review, BaseModel))
+
+    def test_pep8(self):
+        """
+        Test PEP8 conformance
+        """
+        style = StyleGuide(quiet=True)
+        check = style.check_files([MODEL])
+        self.assertEqual(check.total_errors, 0)

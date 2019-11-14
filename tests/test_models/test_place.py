@@ -6,10 +6,13 @@ Test Place
 import unittest
 from models.base_model import BaseModel
 from models.place import Place
-from os import chdir, getcwd
+from os import chdir, getcwd, path
 from pep8 import StyleGuide
 from shutil import rmtree
 from tempfile import mkdtemp
+
+
+MODEL = path.join(getcwd(), 'models', 'place.py')
 
 
 class TestPlace(unittest.TestCase):
@@ -62,3 +65,11 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(my_place.longitude, 0.0)
         self.assertEqual(my_place.amenity_ids, [])
         self.assertTrue(isinstance(my_place, BaseModel))
+
+    def test_pep8(self):
+        """
+        Test PEP8 conformance
+        """
+        style = StyleGuide(quiet=True)
+        check = style.check_files([MODEL])
+        self.assertEqual(check.total_errors, 0)

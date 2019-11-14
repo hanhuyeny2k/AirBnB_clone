@@ -6,10 +6,13 @@ Test FileStorage
 import unittest
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
-from os import chdir, getcwd, listdir, path, remove
+from os import chdir, getcwd, path, remove
 from pep8 import StyleGuide
 from shutil import rmtree
 from tempfile import mkdtemp
+
+
+MODEL = path.join(getcwd(), 'models', 'engine', 'file_storage.py')
 
 
 class TestFileStorage(unittest.TestCase):
@@ -82,3 +85,11 @@ class TestFileStorage(unittest.TestCase):
         objects = my_storage.all()
         my_storage.reload()
         self.assertEqual(my_storage.all(), objects)
+
+    def test_pep8(self):
+        """
+        Test PEP8 conformance
+        """
+        style = StyleGuide(quiet=True)
+        check = style.check_files([MODEL])
+        self.assertEqual(check.total_errors, 0)

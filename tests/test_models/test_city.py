@@ -2,14 +2,16 @@
 """
 Test City
 """
-
 import unittest
 from models.base_model import BaseModel
 from models.city import City
-from os import chdir, getcwd
+from os import chdir, getcwd, path
 from pep8 import StyleGuide
 from shutil import rmtree
 from tempfile import mkdtemp
+
+
+MODEL = path.join(getcwd(), 'models', 'city.py')
 
 
 class TestCity(unittest.TestCase):
@@ -44,3 +46,11 @@ class TestCity(unittest.TestCase):
         self.assertEqual(my_city.state_id, "")
         self.assertEqual(my_city.name, "")
         self.assertTrue(isinstance(my_city, BaseModel))
+
+    def test_pep8(self):
+        """
+        Test PEP8 conformance
+        """
+        style = StyleGuide(quiet=True)
+        check = style.check_files([MODEL])
+        self.assertEqual(check.total_errors, 0)
