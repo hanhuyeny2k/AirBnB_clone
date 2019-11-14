@@ -31,13 +31,13 @@ class test_State(unittest.TestCase):
         """
         Test class
         """
-        assertEqual(State.name, "")
-        assertTrue(issubclass(State, BaseModel))
+        self.assertEqual(State.name, "")
+        self.assertTrue(issubclass(State, BaseModel))
 
     def test_instance(self):
         """
         Test instance
         """
         my_state = State()
-        assertEqual(my_state.name, "")
-        assertTrue(isinstance(my_state, BaseModel))
+        self.assertEqual(my_state.name, "")
+        self.assertTrue(isinstance(my_state, BaseModel))

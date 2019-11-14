@@ -31,17 +31,17 @@ class test_Review(unittest.TestCase):
         """
         Test class
         """
-        assertEqual(Review.place_id, "")
-        assertEqual(Review.user_id, "")
-        assertEqual(Review.text, "")
-        assertTrue(issubclass(Review, BaseModel))
+        self.assertEqual(Review.place_id, "")
+        self.assertEqual(Review.user_id, "")
+        self.assertEqual(Review.text, "")
+        self.assertTrue(issubclass(Review, BaseModel))
 
     def test_instance(self):
         """
         Test instance
         """
         my_review = Review()
-        assertEqual(my_review.place_id, "")
-        assertEqual(my_review.user_id, "")
-        assertEqual(my_review.text, "")
-        assertTrue(isinstance(my_review, BaseModel))
+        self.assertEqual(my_review.place_id, "")
+        self.assertEqual(my_review.user_id, "")
+        self.assertEqual(my_review.text, "")
+        self.assertTrue(isinstance(my_review, BaseModel))

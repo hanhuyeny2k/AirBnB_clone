@@ -6,7 +6,7 @@ Test Amenity
 import unittest
 from models.base_model import BaseModel
 from models.amenity import Amenity
-from os import getcwd, chdir
+from os import getcwd, chdir, listdir
 from shutil import rmtree
 from tempfile import mkdtemp
 
@@ -31,13 +31,13 @@ class test_Amenity(unittest.TestCase):
         """
         Test class
         """
-        assertEqual(Amenity.name, "")
-        assertTrue(issubclass(Amenity, BaseModel))
+        self.assertEqual(Amenity.name, "")
+        self.assertTrue(issubclass(Amenity, BaseModel))
 
     def test_instance(self):
         """
         Test instance
         """
         my_amenity = Amenity()
-        assertEqual(my_amenity.name, "")
-        assertTrue(isinstance(my_amenity, BaseModel))
+        self.assertEqual(my_amenity.name, "")
+        self.assertTrue(isinstance(my_amenity, BaseModel))

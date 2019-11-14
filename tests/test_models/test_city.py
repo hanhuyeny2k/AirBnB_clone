@@ -31,15 +31,15 @@ class test_City(unittest.TestCase):
         """
         Test class
         """
-        assertEqual(City.state_id, "")
-        assertEqual(City.name, "")
-        assertTrue(issubclass(City, BaseModel))
+        self.assertEqual(City.state_id, "")
+        self.assertEqual(City.name, "")
+        self.assertTrue(issubclass(City, BaseModel))
 
     def test_instance(self):
         """
         Test instance
         """
         my_city = City()
-        assertEqual(my_city.state_id, "")
-        assertEqual(my_city.name, "")
-        assertTrue(isinstance(my_city, BaseModel))
+        self.assertEqual(my_city.state_id, "")
+        self.assertEqual(my_city.name, "")
+        self.assertTrue(isinstance(my_city, BaseModel))

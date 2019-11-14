@@ -31,19 +31,19 @@ class test_User(unittest.TestCase):
         """
         Test class
         """
-        assertEqual(User.email, "")
-        assertEqual(User.password, "")
-        assertEqual(User.first_name, "")
-        assertEqual(User.last_name, "")
-        assertTrue(issubclass(User, BaseModel))
+        self.assertEqual(User.email, "")
+        self.assertEqual(User.password, "")
+        self.assertEqual(User.first_name, "")
+        self.assertEqual(User.last_name, "")
+        self.assertTrue(issubclass(User, BaseModel))
 
     def test_instance(self):
         """
         Test instance
         """
         my_user = User()
-        assertEqual(my_user.email, "")
-        assertEqual(my_user.password, "")
-        assertEqual(my_user.first_name, "")
-        assertEqual(my_user.last_name, "")
-        assertTrue(isinstance(my_user, BaseModel))
+        self.assertEqual(my_user.email, "")
+        self.assertEqual(my_user.password, "")
+        self.assertEqual(my_user.first_name, "")
+        self.assertEqual(my_user.last_name, "")
+        self.assertTrue(isinstance(my_user, BaseModel))
