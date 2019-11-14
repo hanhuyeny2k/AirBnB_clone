@@ -4,6 +4,7 @@ Test City
 """
 
 import unittest
+from models.base_model import BaseModel
 from models.city import City
 from os import getcwd, chdir
 from shutil import rmtree
@@ -26,9 +27,19 @@ class test_City(unittest.TestCase):
         """
         rmtree(getcwd(), ignore_errors=True)
 
+    def test_class(self):
+        """
+        Test class
+        """
+        assertEqual(City.state_id, "")
+        assertEqual(City.name, "")
+        assertTrue(issubclass(City, BaseModel))
+
     def test_instance(self):
         """
         Test instance
         """
-        my_model = City()
-        my_model.name = "Holberton"
+        my_city = City()
+        assertEqual(my_city.state_id, "")
+        assertEqual(my_city.name, "")
+        assertTrue(isinstance(my_city, BaseModel))

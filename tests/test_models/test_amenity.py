@@ -4,6 +4,7 @@ Test Amenity
 """
 
 import unittest
+from models.base_model import BaseModel
 from models.amenity import Amenity
 from os import getcwd, chdir
 from shutil import rmtree
@@ -26,9 +27,17 @@ class test_Amenity(unittest.TestCase):
         """
         rmtree(getcwd(), ignore_errors=True)
 
-    def check_name(self):
+    def test_class(self):
+        """
+        Test class
+        """
+        assertEqual(Amenity.name, "")
+        assertTrue(issubclass(Amenity, BaseModel))
+
+    def test_instance(self):
         """
         Test instance
         """
-        my_model = Amenity()
-        my_model.name = "Holberton"
+        my_amenity = Amenity()
+        assertEqual(my_amenity.name, "")
+        assertTrue(isinstance(my_amenity, BaseModel))

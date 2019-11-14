@@ -4,6 +4,7 @@ Test State
 """
 
 import unittest
+from models.base_model import BaseModel
 from models.state import State
 from os import getcwd, chdir
 from shutil import rmtree
@@ -26,9 +27,17 @@ class test_State(unittest.TestCase):
         """
         rmtree(getcwd(), ignore_errors=True)
 
+    def test_class(self):
+        """
+        Test class
+        """
+        assertEqual(State.name, "")
+        assertTrue(issubclass(State, BaseModel))
+
     def test_instance(self):
         """
         Test instance
         """
-        my_model = State()
-        my_model.name = "Holberton"
+        my_state = State()
+        assertEqual(my_state.name, "")
+        assertTrue(isinstance(my_state, BaseModel))

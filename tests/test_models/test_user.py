@@ -4,6 +4,7 @@ Test User
 """
 
 import unittest
+from models.base_model import BaseModel
 from models.user import User
 from os import getcwd, chdir
 from shutil import rmtree
@@ -26,9 +27,23 @@ class test_User(unittest.TestCase):
         """
         rmtree(getcwd(), ignore_errors=True)
 
-    def check_instance(self):
+    def test_class(self):
+        """
+        Test class
+        """
+        assertEqual(User.email, "")
+        assertEqual(User.password, "")
+        assertEqual(User.first_name, "")
+        assertEqual(User.last_name, "")
+        assertTrue(issubclass(User, BaseModel))
+
+    def test_instance(self):
         """
         Test instance
         """
         my_user = User()
-        my_model.last_name = "Holberton"
+        assertEqual(my_user.email, "")
+        assertEqual(my_user.password, "")
+        assertEqual(my_user.first_name, "")
+        assertEqual(my_user.last_name, "")
+        assertTrue(isinstance(my_user, BaseModel))
