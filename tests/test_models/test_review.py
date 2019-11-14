@@ -46,11 +46,3 @@ class TestReview(unittest.TestCase):
         self.assertEqual(my_review.user_id, "")
         self.assertEqual(my_review.text, "")
         self.assertTrue(isinstance(my_review, BaseModel))
-
-    def test_pep8(self):
-        """
-        Test PEP8 conformance
-        """
-        style = StyleGuide(quiet=True)
-        check = style.check_files(['models/place.py'])
-        self.assertEqual(check.total_errors, 0)

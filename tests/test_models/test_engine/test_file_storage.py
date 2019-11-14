@@ -82,11 +82,3 @@ class TestFileStorage(unittest.TestCase):
         objects = my_storage.all()
         my_storage.reload()
         self.assertEqual(my_storage.all(), objects)
-
-    def test_pep8(self):
-        """
-        Test PEP8 conformance
-        """
-        style = StyleGuide(quiet=True)
-        check = style.check_files(['models/place.py'])
-        self.assertEqual(check.total_errors, 0)

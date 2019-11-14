@@ -42,11 +42,3 @@ class TestAmenity(unittest.TestCase):
         my_amenity = Amenity()
         self.assertEqual(my_amenity.name, "")
         self.assertTrue(isinstance(my_amenity, BaseModel))
-
-    def test_pep8(self):
-        """
-        Test PEP8 conformance
-        """
-        style = StyleGuide(quiet=True)
-        check = style.check_files(['models/place.py'])
-        self.assertEqual(check.total_errors, 0)

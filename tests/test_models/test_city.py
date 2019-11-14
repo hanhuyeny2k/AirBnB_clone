@@ -44,11 +44,3 @@ class TestCity(unittest.TestCase):
         self.assertEqual(my_city.state_id, "")
         self.assertEqual(my_city.name, "")
         self.assertTrue(isinstance(my_city, BaseModel))
-
-    def test_pep8(self):
-        """
-        Test PEP8 conformance
-        """
-        style = StyleGuide(quiet=True)
-        check = style.check_files(['models/place.py'])
-        self.assertEqual(check.total_errors, 0)

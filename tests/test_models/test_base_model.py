@@ -97,11 +97,3 @@ class TestBaseModel(unittest.TestCase):
                          my_model.updated_at.isoformat())
         self.assertEqual(my_model.to_dict()["created_at"],
                          my_model.created_at.isoformat())
-
-    def test_pep8(self):
-        """
-        Test PEP8 conformance
-        """
-        style = StyleGuide(quiet=True)
-        check = style.check_files(['models/place.py'])
-        self.assertEqual(check.total_errors, 0)
