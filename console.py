@@ -163,7 +163,7 @@ class HBNBCommand(Cmd):
 
     def precmd(self, line):
         """Parse <class>.<command>(<args>) syntax"""
-        regex = r"([A-Za-z_][A-Za-z0-9_]*)\.([A-Za-z_][A-Za-z0-9_]*)\((.*)\)"
+        regex = "([A-Za-z_][A-Za-z0-9_]*)\\.([A-Za-z_][A-Za-z0-9_]*)\\((.*)\\)"
         match = fullmatch(regex, line.strip())
         if not match:
             return line
