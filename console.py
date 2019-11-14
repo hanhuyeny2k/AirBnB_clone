@@ -184,7 +184,10 @@ class HBNBCommand(Cmd):
                 cmd, cls, inst, quote(str(key)), quote(str(value))
             ])
             self.cmdqueue.append(command)
-        return ""
+        try:
+            return self.cmdqueue.pop()
+        except IndexError:
+            return ""
 
 
 if __name__ == "__main__":
