@@ -46,7 +46,7 @@ class TestFileStorage(unittest.TestCase):
         except FileNotFoundError:
             pass
         my_storage = FileStorage()
-        self.assertTrue(my_storage.all(), dict)
+        self.assertIs(type(my_storage.all()), dict)
 
     def test_new(self):
         """
