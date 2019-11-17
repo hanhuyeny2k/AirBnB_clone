@@ -49,7 +49,7 @@ class HBNBCommand(Cmd):
             else:
                 matches = []
                 for obj in objects.values():
-                    if type(obj) == cls:
+                    if type(obj) is cls:
                         matches.append(str(obj))
                 print(matches)
 
@@ -69,7 +69,7 @@ class HBNBCommand(Cmd):
             else:
                 matches = 0
                 for obj in objects.values():
-                    if type(obj) == cls:
+                    if type(obj) is cls:
                         matches += 1
                 print(matches)
 
